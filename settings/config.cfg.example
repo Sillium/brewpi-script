@@ -23,3 +23,9 @@
 # socketPort=6332
 # socketHost=127.0.0.1
 
+# If you have an InfluxDB running, you can configure its settings here. The BrewPi will then
+# send the temperatures and other data via UDP to the InfluxDB for viewing with Grafana etc.
+# Don't forget to expose the appropriate UDP port in your InfluxDB's config.toml.
+# influxDbEnabled = true
+# influxDbPortUdp = 9445
+# influxDbHost = 127.0.0.1
