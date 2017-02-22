@@ -745,9 +745,6 @@ while run:
                         # store time of last new data for interval check
                         prevDataTime = time.time()
 
-                        if config['dataLogging'] == 'paused' or config['dataLogging'] == 'stopped':
-                            continue  # skip if logging is paused or stopped
-
                         # process temperature line
                         newData = json.loads(line[2:])
                         # copy/rename keys
@@ -755,6 +752,15 @@ while run:
                             prevTempJson[renameTempKey(key)] = newData[key]
 
                         newRow = prevTempJson
+
+                        # === Push the data to InfluxDB: ===
+                        if config.get('influxDbEnabled', False):
+                            from BrewPiInfluxDB import pushToInfluxDB
+                            pushToInfluxDB(newRow, config['influxDbHost'], int(config['influxDbPortUdp']))
+
+                        if config['dataLogging'] == 'paused' or config['dataLogging'] == 'stopped':
+                            continue  # skip if logging is paused or stopped
+
                         # add to JSON file
                         brewpiJson.addRow(localJsonFileName, newRow)
                         # copy to www dir.
@@ -778,6 +784,7 @@ while run:
 
                         csvFile.close()
                         shutil.copyfile(localCsvFileName, wwwCsvFileName)
+
                     elif line[0] == 'D':
                         # debug message received, should already been filtered out, but print anyway here.
                         logMessage("Finding a log message here should not be possible, report to the devs!")
