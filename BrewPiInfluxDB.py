@@ -15,6 +15,8 @@ def pushToInfluxDB(row, host, port):
     logging.exception("Pushing to InfluxDB failed.")
   return
 
+# test
+
 def getLineString(row):
   lineString = "brewPi,origin=brewpi-script,host=%s" % (socket.gethostname())
 
